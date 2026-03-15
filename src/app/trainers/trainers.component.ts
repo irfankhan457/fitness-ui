@@ -2,18 +2,29 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatCard } from "@angular/material/card";
+import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatTableModule } from '@angular/material/table';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
  selector:'app-trainers',
  standalone:true,
- imports:[CommonModule,FormsModule],
- templateUrl:'./trainers.component.html'
+ imports: [MatTableModule,
+  CommonModule, FormsModule, MatCard, 
+  MatFormField, MatLabel, MatInputModule, MatButtonModule, MatFormFieldModule],
+ templateUrl:'./trainers.component.html',
+ styleUrls: ['./trainers.component.scss']
 })
 export class TrainersComponent implements OnInit{
 
  trainers:any[]=[];
  trainerName='';
  private nextTempId = -1;
+ displayedColumns: string[] = ['id','name','action'];
 
  constructor(
    private api:ApiService,
