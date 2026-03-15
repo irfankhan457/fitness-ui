@@ -1,168 +1,218 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { finalize } from 'rxjs';
-import { environment } from '../../environments/environment';
-
-interface Membership {
-  id?: number;
-  name: string;
-  price: number;
-  durationInMonths: number;
-  description: string;
-}
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MembershipService, Membership } from '../../services/membership.service';
+import { MembershipDialogComponent } from './membership-dialog.component';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 
 @Component({
-  selector: 'app-membership',
-  standalone: true,
-  imports: [CommonModule, MatCardModule],
-  templateUrl: './memberships.component.html',
-  styleUrls: ['./memberships.component.scss']
-  // template: `
-  // <h2 style="margin:20px">Membership Plans</h2>
+  selector:'app-membership',
+  standalone:true,
+  imports:[
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatDialogModule
+],
+  template: `
+<div class="page">
 
-  // <!-- Loading -->
-  // <div *ngIf="loading" style="margin:20px">
-  //   Loading membership plans...
-  // </div>
+  <div class="header">
+    <h2>Membership Plans</h2>
 
-  // <!-- Error -->
-  // <div *ngIf="error" style="margin:20px;color:red">
-  //   {{error}}
-  // </div>
+    <button mat-raised-button color="primary"
+      (click)="openAddDialog()">
+      Add Membership
+    </button>
+  </div>
 
-  // <!-- Empty -->
-  // <div *ngIf="!loading && memberships.length === 0 && !error" style="margin:20px">
-  //   No membership plans available
-  // </div>
+  <div class="grid">
 
-  // <!-- Membership Cards -->
-  // <mat-card *ngFor="let m of memberships" style="margin:10px;padding:15px">
-  //     <h3>{{m.name}}</h3>
+    <mat-card class="membership-card"
+      *ngFor="let m of memberships">
 
-  //     <p>
-  //       <b>Price:</b> ₹{{m.price}}
-  //     </p>
+      <mat-card-title>
+        {{m.name}}
+      </mat-card-title>
 
-  //     <p>
-  //       <b>Duration:</b> {{m.durationInMonths}} months
-  //     </p>
+      <mat-card-content>
 
-  //     <p>
-  //       {{m.description}}
-  //     </p>
-  // </mat-card>
-  // `
+        <p class="price">
+          ₹{{m.price}}
+        </p>
+
+        <p>
+          Duration: {{m.durationInMonths}} months
+        </p>
+
+        <p class="desc">
+          {{m.description}}
+        </p>
+
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+
+        <button mat-stroked-button color="primary"
+          (click)="openEditDialog(m)">
+          Edit
+        </button>
+
+        <button mat-stroked-button color="warn"
+          (click)="deleteMembership(m.id!)">
+          Delete
+        </button>
+
+      </mat-card-actions>
+
+    </mat-card>
+
+  </div>
+
+</div>
+`,
+styles:[`
+
+.page{
+padding:30px;
+background:#f5f5f5;
+min-height:100vh;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+gap:20px;
+}
+
+.membership-card{
+padding:15px;
+border-radius:10px;
+transition:0.2s;
+}
+
+.membership-card:hover{
+transform:translateY(-4px);
+box-shadow:0 6px 18px rgba(0,0,0,0.15);
+}
+
+.price{
+font-size:22px;
+font-weight:bold;
+color:#2e7d32;
+margin-bottom:10px;
+}
+
+.desc{
+color:#555;
+margin-top:10px;
+}
+
+`]
 })
-export class MembershipComponent implements OnInit {
+export class MembershipComponent implements OnInit{
 
-  memberships: Membership[] = [];
-  loading = true;
-  error = '';
+  memberships:Membership[]=[];
 
   constructor(
-    private http: HttpClient,
+    private service:MembershipService,
+    private dialog:MatDialog,
     private cdr: ChangeDetectorRef
-  ) {}
+  ){}
 
-  ngOnInit(): void {
-    this.fetchMemberships();
+  ngOnInit(){
+    this.loadMemberships();
   }
 
-  private fetchMemberships(): void {
-
-    const url = `${environment.apiUrl}/memberships`;
-
-    console.log("Calling API:", url);
-
-    this.http
-      .get<unknown>(url)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.cdr.detectChanges();
-        })
-      )
-      .subscribe({
-
-      next: (data: unknown) => {
-        console.log("API Response:", data);
-
-        // Some backends wrap arrays inside "data" or "content" fields.
-        const normalized = Array.isArray(data)
-          ? data
-          : Array.isArray((data as { data?: unknown[] })?.data)
-            ? (data as { data: unknown[] }).data
-            : Array.isArray((data as { content?: unknown[] })?.content)
-              ? (data as { content: unknown[] }).content
-              : [];
-
-        this.memberships = normalized as Membership[];
-
-        if (!Array.isArray(data) && normalized.length === 0) {
-          this.error = "Membership API returned an unexpected response format.";
-        }
-      },
-
-      error: (err) => {
-        console.error("API ERROR:", err);
-
-        this.error = "Unable to load membership plans. Check backend URL/response and CORS settings.";
-      }
-
+  loadMemberships(){
+    this.service.getAll().subscribe(res=>{
+      this.memberships = res;
+      this.cdr.detectChanges();
     });
   }
 
+  openAddDialog(){
+
+    const dialogRef=this.dialog.open(
+      MembershipDialogComponent,
+      {width:'400px',data:{}}
+    );
+
+    dialogRef.afterClosed().subscribe(result=>{
+      if(result){
+        this.service.create(result)
+          .subscribe((created)=>{
+            if (created) {
+              this.memberships = [created, ...this.memberships];
+            }
+            this.cdr.detectChanges();
+            this.loadMemberships();
+          });
+      }
+    });
+  }
+
+  openEditDialog(m:Membership){
+
+    const dialogRef=this.dialog.open(
+      MembershipDialogComponent,
+      {width:'400px',data:{...m}}
+    );
+
+    dialogRef.afterClosed().subscribe(result=>{
+      if(result){
+        this.service.update(m.id!,result)
+          .subscribe((updated)=>{
+            this.memberships = this.memberships.map(item =>
+              item.id === m.id ? updated : item
+            );
+            this.cdr.detectChanges();
+            this.loadMemberships();
+          });
+      }
+    });
+  }
+
+  // deleteMembership(id:number){
+
+  //   if(confirm("Delete membership?")){
+  //     this.service.delete(id)
+  //       .subscribe(()=>{
+  //         this.memberships = this.memberships.filter(m => m.id !== id);
+  //         this.cdr.detectChanges();
+  //         this.loadMemberships();
+  //       });
+  //   }
+
+  // }
   deleteMembership(id:number){
 
-  if(!confirm("Delete this membership?")) return;
+  const dialogRef = this.dialog.open(
+    ConfirmDialogComponent,
+    {
+      width: '350px',
+      data: { message: 'Are you sure you want to delete this membership?' }
+    }
+  );
 
-  this.http.delete(`${environment.apiUrl}/memberships/${id}`)
-    .subscribe(()=>{
-      this.fetchMemberships();
-      this.cdr.detectChanges();
-    });
+  dialogRef.afterClosed().subscribe(result => {
 
-}
+    if(result){
+      this.service.delete(id)
+        .subscribe(()=> this.loadMemberships());
+    }
 
-addMembership(){
-
-  const name = prompt("Membership name?");
-  const price = Number(prompt("Price?"));
-  const duration = Number(prompt("Duration in months?"));
-  const description = prompt("Description?");
-
-  const body = {
-    name,
-    price,
-    durationInMonths: duration,
-    description
-  };
-
-  this.http.post<Membership>(
-    `${environment.apiUrl}/memberships`,
-    body
-  ).subscribe(newMembership=>{
-      this.fetchMemberships();
-      this.cdr.detectChanges();
   });
 
 }
-editMembership(m:Membership){
 
-  const price =
-    Number(prompt("New price:", String(m.price)));
-
-  const body = {...m, price};
-
-  this.http.put<Membership>(
-    `${environment.apiUrl}/memberships/${m.id}`,
-    body
-  ).subscribe(updated=>{
-    this.fetchMemberships();
-    this.cdr.detectChanges();
-  });
-
-}
 }
