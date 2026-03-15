@@ -1,0 +1,11 @@
+<nav *ngIf="isLoggedIn()" style="background:black;padding:10px">
+
+  <a routerLink="/dashboard" style="color:white;margin-right:20px">Dashboard</a>
+  <a routerLink="/trainers" style="color:white;margin-right:20px">Trainers</a>
+  <a routerLink="/membership" style="color:white;margin-right:20px">Membership</a>
+  <a routerLink="/payments" style="color:white;margin-right:20px">Payments</a>
+  <a routerLink="/booking" style="color:white;margin-right:20px">Booking</a>
+
+  <button (click)="logout()">Logout</button>
+
+</nav>

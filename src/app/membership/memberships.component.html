@@ -1,0 +1,55 @@
+<h2 class="title">Membership Plans</h2>
+
+<div *ngIf="loading" class="loading">
+  Loading membership plans...
+</div>
+
+<div *ngIf="error" class="error">
+  {{error}}
+</div>
+
+<div *ngIf="!loading && memberships.length === 0 && !error" class="empty">
+  No membership plans available
+</div>
+
+<div class="membership-grid">
+
+  <mat-card class="membership-card" *ngFor="let m of memberships">
+
+      <mat-card-header>
+        <mat-card-title>{{m.name}}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <p class="price">
+          ₹{{m.price}}
+        </p>
+
+        <p>
+          Duration: {{m.durationInMonths}} months
+        </p>
+
+        <p class="description">
+          {{m.description}}
+        </p>
+
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="editMembership(m)">
+          Edit
+        </button>
+
+        <button mat-button color="warn" (click)="deleteMembership(m.id!)">
+          Delete
+        </button>
+      </mat-card-actions>
+
+  </mat-card>
+
+</div>
+
+<button class="add-btn" (click)="addMembership()">
+  + Add Membership
+</button>

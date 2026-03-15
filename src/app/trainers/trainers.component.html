@@ -1,0 +1,27 @@
+<h2>Trainers</h2>
+
+<input [(ngModel)]="trainerName" placeholder="Trainer Name">
+<button (click)="addTrainer()">Add Trainer</button>
+
+<hr>
+
+<table border="1">
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Action</th>
+</tr>
+
+<tr *ngFor="let t of trainers">
+
+<td>{{t.id}}</td>
+<td>{{t.name}}</td>
+
+<td>
+<button (click)="deleteTrainer(t.id)">Delete</button>
+</td>
+
+</tr>
+
+</table>
