@@ -4,9 +4,6 @@ import { environment } from '../environments/environment';
 
 @Injectable({providedIn:'root'})
 export class ApiService {
-  get<T>(arg0: string) {
-    throw new Error('Method not implemented.');
-  }
 
    baseUrl = environment.apiUrl;
 
@@ -32,17 +29,33 @@ export class ApiService {
     return this.http.get<any>(`${this.baseUrl}/memberships`);
   }
   
+  addTrainer(trainer:any){
+    return this.http.post(`${this.baseUrl}/trainers`,trainer);
+  }
 
-addTrainer(trainer:any){
-  return this.http.post(`${this.baseUrl}/trainers`,trainer);
-}
+  deleteTrainer(id:number){
+    return this.http.delete(`${this.baseUrl}/trainers/${id}`);
+  }
 
-deleteTrainer(id:number){
-  return this.http.delete(`${this.baseUrl}/trainers/${id}`);
-}
+  updateTrainer(id:number,trainer:any){
+    return this.http.put(`${this.baseUrl}/trainers/${id}`,trainer);
+  }
 
-updateTrainer(id:number,trainer:any){
-  return this.http.put(`${this.baseUrl}/trainers/${id}`,trainer);
-}
+  // Booking endpoints
+  getBookings(){
+    return this.http.get<any[]>(`${this.baseUrl}/bookings`);
+  }
+
+  createBooking(booking:any){
+    return this.http.post(`${this.baseUrl}/bookings`, booking);
+  }
+
+  updateBooking(id:number, booking:any){
+    return this.http.put(`${this.baseUrl}/bookings/${id}`, booking);
+  }
+
+  deleteBooking(id:number){
+    return this.http.delete(`${this.baseUrl}/bookings/${id}`);
+  }
 
 }

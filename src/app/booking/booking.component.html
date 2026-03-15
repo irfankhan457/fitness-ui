@@ -1,0 +1,131 @@
+<div class="page">
+
+  <div class="header">
+    <h2>Session Booking</h2>
+  </div>
+
+  <!-- Booking Form -->
+  <mat-card class="booking-form">
+    <h3>Book a Training Session</h3>
+    
+    <div class="form-content">
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Select Trainer</mat-label>
+        <mat-select [(ngModel)]="newBooking.trainerId">
+          <mat-option *ngFor="let trainer of trainers" [value]="trainer.id">
+            {{trainer.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Session Date</mat-label>
+        <input matInput type="date" [(ngModel)]="newBooking.sessionDate">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Session Time</mat-label>
+        <input matInput type="time" [(ngModel)]="newBooking.sessionTime">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Duration (minutes)</mat-label>
+        <mat-select [(ngModel)]="newBooking.duration">
+          <mat-option [value]="30">30 minutes</mat-option>
+          <mat-option [value]="60">60 minutes</mat-option>
+          <mat-option [value]="90">90 minutes</mat-option>
+          <mat-option [value]="120">120 minutes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" 
+        (click)="bookSession()"
+        [disabled]="!isFormValid()">
+        Book Session
+      </button>
+
+    </div>
+
+  </mat-card>
+
+  <!-- Bookings Table -->
+  <mat-card class="bookings-table">
+    <h3>My Bookings</h3>
+
+    <div *ngIf="loading" class="loading">
+      Loading bookings...
+    </div>
+
+    <div *ngIf="!loading && bookings.length === 0" class="empty">
+      No bookings found. Book your first training session above!
+    </div>
+
+    <table mat-table [dataSource]="bookings" *ngIf="!loading && bookings.length > 0">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let booking">{{booking.id}}</td>
+      </ng-container>
+
+      <!-- Trainer Column -->
+      <ng-container matColumnDef="trainer">
+        <th mat-header-cell *matHeaderCellDef>Trainer</th>
+        <td mat-cell *matCellDef="let booking">{{booking.trainerName || 'Trainer #' + booking.trainerId}}</td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let booking">{{booking.sessionDate | date:'mediumDate'}}</td>
+      </ng-container>
+
+      <!-- Time Column -->
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef>Time</th>
+        <td mat-cell *matCellDef="let booking">{{booking.sessionTime}}</td>
+      </ng-container>
+
+      <!-- Duration Column -->
+      <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef>Duration</th>
+        <td mat-cell *matCellDef="let booking">{{booking.duration}} min</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let booking">
+          <span class="status-badge" [class.status-confirmed]="booking.status === 'confirmed'"
+                [class.status-cancelled]="booking.status === 'cancelled'">
+            {{booking.status || 'Confirmed'}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let booking">
+          <button mat-stroked-button color="primary" 
+            (click)="rescheduleBooking(booking)"
+            [disabled]="booking.status === 'cancelled'">
+            Reschedule
+          </button>
+          <button mat-stroked-button color="warn" 
+            (click)="cancelBooking(booking.id!)"
+            [disabled]="booking.status === 'cancelled'">
+            Cancel
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+  </mat-card>
+
+</div>
