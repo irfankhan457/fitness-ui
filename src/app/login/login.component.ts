@@ -2,12 +2,27 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { Router, RouterLink } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
-  templateUrl: './login.component.html'
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    RouterLink
+  ],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
@@ -27,9 +42,7 @@ login(){
 
       localStorage.setItem("token",res.token);
 
-      alert("Login successful");
-
-      // window.location.href="/dashboard";   // 🔥 important change
+      //alert("Login successful");
       this.router.navigate(['/dashboard']);
 
     },
@@ -39,36 +52,5 @@ login(){
   });
 
 }
-  // login() {
-
-  //   const payload = {
-  //     email: this.username,
-  //     password: this.password
-  //   };
-
-  //   this.api.login(payload).subscribe({
-
-  //     next: (res: any) => {
-
-  //       // Save JWT token
-  //       localStorage.setItem('token', res.token);
-
-  //       console.log("Login success", res);
-
-  //       // Navigate to dashboard
-  //       this.router.navigate(['/dashboard']);
-
-  //     },
-
-  //     error: (err) => {
-
-  //       console.error("Login failed", err);
-  //       alert("Invalid username or password");
-
-  //     }
-
-  //   });
-
-  // }
 
 }

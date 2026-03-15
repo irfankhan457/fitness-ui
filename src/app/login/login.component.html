@@ -1,4 +1,4 @@
-<h2>Login</h2>
+<!-- <h2>Login</h2>
 
 <div>
 
@@ -16,4 +16,37 @@
 
 <a routerLink="/register">Register</a>
 
+</div> -->
+<div class="login-page">
+  <div class="login-container">
+    <div class="brand">Fitness Mantra</div>
+
+    <mat-card class="login-card">
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Login to continue to your dashboard</p>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput [(ngModel)]="username" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="password" />
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="login-btn"
+        (click)="login()">
+        Login
+      </button>
+
+      <div class="register">
+        Don’t have an account?
+        <a routerLink="/register">Create account</a>
+      </div>
+    </mat-card>
+  </div>
 </div>

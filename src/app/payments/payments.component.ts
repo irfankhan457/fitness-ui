@@ -10,6 +10,7 @@ template:`
 <p>Payments module UI.</p>
 </mat-card>
 `,
+styleUrls:['./payments.component.scss'],
 imports: [MatCard]
 })
 export class PaymentsComponent{}

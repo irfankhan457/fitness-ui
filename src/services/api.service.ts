@@ -12,23 +12,12 @@ export class ApiService {
 
   constructor(private http:HttpClient){}
 
-//   login(username:string,password:string){
-//     return this.http.post(this.baseUrl+"/login",{username,password});
-//   }
-
-//   getTrainers(){
-//     return this.http.get(this.baseUrl+"/trainers");
-//   }
-
-//   getMembership(){
-//     return this.http.get(this.baseUrl+"/membership");
-//   }
   login(data:any){
     return this.http.post(`${this.baseUrl}/auth/login`,data);
   }
 
   register(data:any){
-    return this.http.post(`${this.baseUrl}/auth/register`,data);
+    return this.http.post(`${this.baseUrl}/auth/register`, data);
   }
 
   getTrainers(){

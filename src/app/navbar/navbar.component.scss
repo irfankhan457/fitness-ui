@@ -1,0 +1,19 @@
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo{
+  font-size:18px;
+  font-weight:600;
+}
+
+.spacer{
+  flex:1 1 auto;
+}
+
+a{
+  margin-right:10px;
+  font-weight:500;
+}

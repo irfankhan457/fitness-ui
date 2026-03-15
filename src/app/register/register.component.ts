@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent{
 
-  name='';
   email='';
   password='';
 
@@ -20,9 +19,9 @@ export class RegisterComponent{
   register(){
 
     const payload={
-      name:this.name,
       email:this.email,
-      password:this.password
+      password:this.password,
+      role:'USER'
     }
 
     this.api.register(payload).subscribe({
@@ -31,7 +30,8 @@ export class RegisterComponent{
         this.router.navigate(['/login']);
       },
       error:(err)=>{
-        alert("Registration failed");
+        const message = err?.error?.message || err?.error || "Registration failed";
+        alert(message);
       }
     });
 

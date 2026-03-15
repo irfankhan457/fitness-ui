@@ -10,6 +10,7 @@ template:`
 <p>Booking module UI.</p>
 </mat-card>
 `,
+styleUrls:['./booking.component.scss'],
 imports: [MatCard]
 })
 export class BookingComponent{}

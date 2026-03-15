@@ -1,4 +1,4 @@
-<nav *ngIf="isLoggedIn()" style="background:black;padding:10px">
+<!-- <nav *ngIf="isLoggedIn()" style="background:black;padding:10px">
 
   <a routerLink="/dashboard" style="color:white;margin-right:20px">Dashboard</a>
   <a routerLink="/trainers" style="color:white;margin-right:20px">Trainers</a>
@@ -8,4 +8,25 @@
 
   <button (click)="logout()">Logout</button>
 
-</nav>
+</nav> -->
+
+<mat-toolbar *ngIf="isLoggedIn()" color="primary" class="navbar">
+
+  <!-- Logo / Title -->
+  <span class="logo">Fitness Mantra</span>
+
+  <span class="spacer"></span>
+
+  <!-- Navigation Links -->
+  <a mat-button routerLink="/dashboard">Dashboard</a>
+  <a mat-button routerLink="/trainers">Trainers</a>
+  <a mat-button routerLink="/membership">Membership</a>
+  <a mat-button routerLink="/payments">Payments</a>
+  <a mat-button routerLink="/booking">Booking</a>
+
+  <!-- Logout -->
+  <button mat-raised-button color="accent" (click)="logout()">
+    Logout
+  </button>
+
+</mat-toolbar>

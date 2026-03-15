@@ -1,4 +1,4 @@
-<h2 class="title">Membership Plans</h2>
+<!-- <h2 class="title">Membership Plans</h2>
 
 <div *ngIf="loading" class="loading">
   Loading membership plans...
@@ -52,4 +52,47 @@
 
 <button class="add-btn" (click)="addMembership()">
   + Add Membership
-</button>
+</button> -->
+
+<div class="page">
+
+  <div class="header">
+
+    <h2>Membership Plans</h2>
+
+    <button mat-raised-button color="primary"
+    (click)="openAddDialog()">
+    Add Membership
+    </button>
+
+  </div>
+
+  <div class="grid">
+
+    <mat-card *ngFor="let m of memberships">
+
+      <h3>{{m.name}}</h3>
+
+      <p><b>Price:</b> ₹{{m.price}}</p>
+
+      <p><b>Duration:</b> {{m.durationInMonths}} months</p>
+
+      <p>{{m.description}}</p>
+
+      <div class="action-buttons">
+
+        <button mat-stroked-button color="primary">
+        Edit
+        </button>
+
+        <button mat-stroked-button color="warn">
+        Delete
+        </button>
+
+      </div>
+
+    </mat-card>
+
+  </div>
+
+</div>
