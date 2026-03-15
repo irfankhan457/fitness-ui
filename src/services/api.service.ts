@@ -58,4 +58,13 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/bookings/${id}`);
   }
 
+  // Payment endpoints
+  getPayments(){
+    return this.http.get<any[]>(`${this.baseUrl}/payments`);
+  }
+
+  createPayment(payment:any){
+    return this.http.post(`${this.baseUrl}/payments`, payment);
+  }
+
 }
